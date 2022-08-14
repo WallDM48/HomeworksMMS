@@ -20,13 +20,15 @@ void rand_Init_Book(Book *b){
 
     int len =randInit(10,20); 
     char buf [] = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
-    for(int i =0 ; i < len-1 ;i++)
+    b->title[0] = buf[26 + rand()%26];
+    for(int i =1 ; i < len-1 ;i++)
     {
         b->title[i] = buf[rand()%53];   
     }
     b->title[len] ='\0';
     len = randInit(10,20); 
-    for(int i =0 ; i < len-1;i++)
+    b->author[0] = buf[26 + rand()%26];
+    for(int i =1 ; i < len-1;i++)
     {
         b->author[i] = buf[rand()%53];
     }
@@ -39,38 +41,34 @@ void rand_Init_Book(Book *b){
 }
 
 void print_struct(Book *b){
-    int i =0 ;
     printf(" Title: %s Author: %s  Pages: %d  Price: %.2lf\n",b->title,b->author,b->pages,b->price);
 }
 
 int main(int argc, char**argv){
 
     srand(time(NULL));
+    
+    
     Book *books = malloc(COUNT*sizeof(Book));
     for (int i = 0; i < COUNT; i++)
     {
         rand_Init_Book(books+i);
+        print_struct(books+i);
     }
     
-    
- 
-    FILE *f = fopen(argv[1],"wb");
-    if(!f){
+
+    FILE *fb = fopen(argv[1],"wb");
+    if(!fb){
         fprintf(stderr,"Cannot open file!\n");
         exit(EXIT_FAILURE);
     }
 
-    //fwrite(books,sizeof(books),1,f);
-    
-    for (int i = 0; i < COUNT; i++)
-    {
-         print_struct(books+i);
-         fwrite(books+i,sizeof(books),1,f);
+    if(fwrite(books,sizeof(Book),COUNT,fb) != COUNT){
+       perror("writing error!\n");
     }
-   
-    
+
+    fclose(fb);
     free(books);
-    fclose(f);
  
     return 0;
 }
