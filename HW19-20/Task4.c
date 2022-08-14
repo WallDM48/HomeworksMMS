@@ -48,9 +48,12 @@ void *consumer(void *arg){
     
     pthread_mutex_lock(&mux);
     Storage *del_prod = buff;
+    
     printf("Pokupka TID: %ld ",pthread_self());
     print_product(buff);
+    
     buff = del_prod->next;
+    
     fprintf(arg,"Barcode: %d, Definition: %d, Price: %.2lf\n",buff->barcode,buff->name,buff->price);
     free(del_prod);
 
