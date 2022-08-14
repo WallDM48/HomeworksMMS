@@ -1,0 +1,15 @@
+CC=gcc // def value 
+src = $(wildcard *.c) // def value (included all .c files) 
+obj = $(src:.c=.o) // def value 
+
+LDFLAGS = -lGL -lglut -lpng -lz -lm // thats flags, arguments to gcc
+
+myprog: $(obj) // target my prog takes the value of obj 
+    $(CC) -o $@ $^ $(LDFLAGS) // compiling obj with flags
+
+%.o: %.c
+    $(CC) -o $@ -c $< // compiling to object files the .c files
+
+.PHONY: clean
+clean: // delete the obj files
+    rm -f $(obj) myprog
